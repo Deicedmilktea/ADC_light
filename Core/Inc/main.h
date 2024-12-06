@@ -57,6 +57,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define V_OUT_Pin GPIO_PIN_2
+#define V_OUT_GPIO_Port GPIOA
+#define LIGHT_Pin GPIO_PIN_4
+#define LIGHT_GPIO_Port GPIOA
+#define SOUND_Pin GPIO_PIN_5
+#define SOUND_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
