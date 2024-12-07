@@ -11,7 +11,7 @@
 #define KI 5.f
 #define KD 1.f
 
-static control_mode_e control_mode = SOUND_CONTROL;
+static control_mode_e control_mode = LIGHT_CONTROL;
 static uint8_t rx_data;
 
 static uint16_t adc_values[ADC_CHANNEL_NUM];
@@ -73,9 +73,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1)
     {
-        if (rx_data == LIGHT_CONTROL || rx_data == SOUND_CONTROL)
+        // 判断接收到的字符是否为数字字符
+        if (rx_data >= '0' && rx_data <= '9')
         {
-            control_mode = (control_mode_e)rx_data;
+            // 将 ASCII 码转换为对应的数值
+            uint8_t number = rx_data - '0';
+            control_mode = (control_mode_e)number;
         }
         else
         {
