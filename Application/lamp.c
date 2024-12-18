@@ -9,7 +9,7 @@
 #define RX_DATA_SIZE 3
 #define MAX_INTEGRAL 1000
 #define MANUAL_INTENSITY_MIN 0
-#define MANUAL_INTENSITY_MAX 4096
+#define MANUAL_INTENSITY_MAX 5000
 #define EFFECT_MIN 0
 #define EFFECT_MAX 1000
 #define KP 50.f
@@ -103,7 +103,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         lamp_data.manual_intensity = (uint16_t)((rx_data[1] << 8) | rx_data[2]);
 
         // 判断接收到的数据是否合法
-        if (lamp_data.control_mode >= 0 && lamp_data.control_mode <= 4)
+        if (lamp_data.control_mode >= 0 && lamp_data.control_mode <= 5)
         {
             control_mode = lamp_data.control_mode;
             manual_intensity = lamp_data.manual_intensity;
@@ -148,7 +148,7 @@ static void light_control()
     }
 
     // 将light_intensity映射到8-12范围
-    voltage_ref = map_intensity(light_intensity, light_intensity_min, light_intensity_max, 8.0f, 12.0f);
+    voltage_ref = map_intensity(light_intensity, light_intensity_min, light_intensity_max, 8.0f, 13.0f);
 
     control_output = PID_calculate(voltage_ref, voltage_out);
     // 更新PWM占空比
@@ -186,7 +186,7 @@ static void sound_control()
     }
 
     // 将light_intensity映射到8-12范围
-    voltage_ref = map_intensity(sound_intensity, sound_intensity_min, sound_intensity_max, 8.0f, 12.0f);
+    voltage_ref = map_intensity(sound_intensity, sound_intensity_min, sound_intensity_max, 8.0f, 13.0f);
 
     control_output = PID_calculate(voltage_ref, voltage_out);
 
@@ -222,7 +222,7 @@ float smooth_sound_value(float new_value)
 void manual_control()
 {
     voltage_out = adc_values[0] * 3.3f / 4096 * 780 * 20000 / 2500 / 1000;
-    voltage_ref = map_intensity(manual_intensity, MANUAL_INTENSITY_MIN, MANUAL_INTENSITY_MAX, 6.0f, 12.0f);
+    voltage_ref = map_intensity(manual_intensity, MANUAL_INTENSITY_MIN, MANUAL_INTENSITY_MAX, 6.0f, 15.0f);
     control_output = PID_calculate(voltage_ref, voltage_out);
     // 更新PWM占空比
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, (uint32_t)control_output);
@@ -260,7 +260,7 @@ void breathing_light()
 }
 
 /**
- * @brief 恶魔大鼠标
+ * @brief 邪恶大鼠标
  */
 void evil_big_mouse()
 {
